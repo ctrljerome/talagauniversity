@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Courses – Admin | Talaga University</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/portal.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+<aside class="sidebar admin-sidebar" id="sidebar">
+  <div class="sb-brand"><div class="sb-crest" style="background:linear-gradient(160deg,#e05555 0%,#9a2020 100%)"><i class="fa-solid fa-shield-halved"></i></div><div class="sb-text"><div class="sb-univ">Talaga University</div><div class="sb-sub" style="color:#e05555">Admin Panel</div></div></div>
+  <nav class="sb-nav">
+    <div class="nav-section">Management</div>
+    <a href="dashboard.html"     class="nav-item" data-page="dashboard"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></a>
+    <a href="students.html"      class="nav-item" data-page="students"><i class="fa-solid fa-users"></i><span>Students</span></a>
+    <a href="instructors.html"   class="nav-item" data-page="instructors"><i class="fa-solid fa-chalkboard-user"></i><span>Instructors</span></a>
+    <a href="courses.html"       class="nav-item active" data-page="courses"><i class="fa-solid fa-book-open"></i><span>Courses</span></a>
+    <div class="nav-section">Academic</div>
+    <a href="grades.html"        class="nav-item" data-page="grades"><i class="fa-solid fa-chart-line"></i><span>Grades</span></a>
+    <a href="announcements.html" class="nav-item" data-page="announcements"><i class="fa-solid fa-bullhorn"></i><span>Announcements</span></a>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-user"><div class="sb-avatar" id="sb-avatar">A</div><div class="sb-user-info"><div class="sb-user-name" id="sb-name">Administrator</div><div class="sb-user-role" style="color:#e05555">Admin</div></div></div>
+    <button class="logout-btn" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i><span>Sign Out</span></button>
+  </div>
+</aside>
+<div class="mobile-top"><button class="menu-btn" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button><span class="mob-brand">TU Admin</span><div class="mob-av" id="mob-av">A</div></div>
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<main class="main">
+  <div class="pg-header">
+    <div><div class="pg-eyebrow" style="color:#e05555">Course Offerings</div><h1 class="pg-title">Course Management</h1></div>
+    <button class="btn btn-gold" onclick="openCreate()"><i class="fa-solid fa-plus"></i> Add Course</button>
+  </div>
+
+  <div class="card">
+    <div class="toolbar">
+      <div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="search" placeholder="Search by code, name, or instructor…" oninput="filter()"></div>
+      <div class="filter-row">
+        <select class="flt-select" id="sem-filter" onchange="filter()"><option value="">All Semesters</option><option value="1st">1st</option><option value="2nd">2nd</option><option value="Summer">Summer</option></select>
+        <span id="count" style="font-size:13px;color:var(--text-m)"></span>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Code</th><th>Course Name</th><th>Units</th><th>Instructor</th><th>Enrollment</th><th>Semester</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="tbody"><tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-m)"><i class="fa-solid fa-spinner fa-spin"></i></td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<!-- Modal -->
+<div class="modal-bg" id="modal">
+  <div class="modal" style="max-width:580px">
+    <div class="modal-hd"><span class="modal-title" id="modal-title">Add Course</span><button class="modal-close" onclick="closeModal('modal')"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <input type="hidden" id="edit-id">
+      <div class="frow">
+        <div class="fgroup"><label>Course Code *</label><input type="text" id="f-code" placeholder="CS101"></div>
+        <div class="fgroup"><label>Units *</label><input type="number" id="f-units" min="1" max="6" placeholder="3"></div>
+        <div class="fgroup full"><label>Course Name *</label><input type="text" id="f-name" placeholder="Introduction to Computing"></div>
+        <div class="fgroup full"><label>Description</label><textarea id="f-desc" rows="2" placeholder="Brief course description…"></textarea></div>
+        <div class="fgroup"><label>Instructor *</label><input type="text" id="f-instructor" placeholder="Prof. Name"></div>
+        <div class="fgroup"><label>Department</label><input type="text" id="f-dept" placeholder="Computer Science"></div>
+        <div class="fgroup"><label>Max Students</label><input type="number" id="f-max" value="40"></div>
+        <div class="fgroup"><label>Tuition / Unit (₱)</label><input type="number" id="f-tuition" value="500"></div>
+        <div class="fgroup"><label>Semester</label><select id="f-sem"><option value="1st">1st</option><option value="2nd">2nd</option><option value="Summer">Summer</option></select></div>
+        <div class="fgroup"><label>Academic Year</label><input type="text" id="f-ay" placeholder="2024-2025"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeModal('modal')">Cancel</button>
+      <button class="btn btn-gold" id="save-btn" onclick="save()"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+    </div>
+  </div>
+</div>
+
+<script src="../js/portal.js"></script>
+<script>
+const e=s=>s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):'—';
+let all=[];
+
+(async()=>{ requireAdmin(); await load(); })();
+
+async function load(){
+  const res=await apiFetch('/courses');
+  if(!res?.ok) return showToast('Failed to load','error');
+  all=res.data.courses||[];
+  document.getElementById('count').textContent=`${all.length} course(s)`;
+  filter();
+}
+
+function filter(){
+  const q=document.getElementById('search').value.toLowerCase();
+  const s=document.getElementById('sem-filter').value;
+  const list=all.filter(c=>{
+    const txt=`${c.courseCode} ${c.courseName} ${c.instructor||''}`.toLowerCase();
+    return(!q||txt.includes(q))&&(!s||c.semester===s);
+  });
+  document.getElementById('count').textContent=`${list.length}/${all.length}`;
+  render(list);
+}
+
+function render(list){
+  const tb=document.getElementById('tbody');
+  if(!list.length){tb.innerHTML=`<tr><td colspan="8" style="text-align:center;padding:48px;color:var(--text-m)">No courses found.</td></tr>`;return;}
+  tb.innerHTML=list.map(c=>`<tr>
+    <td><span class="badge bg-gold">${e(c.courseCode)}</span></td>
+    <td><strong>${e(c.courseName)}</strong><div class="sub">${e(c.department||'')}</div></td>
+    <td style="text-align:center">${c.units}</td>
+    <td>${e(c.instructor)}</td>
+    <td>
+      <div style="font-size:12px;font-weight:600">${c.enrolledCount}/${c.maxStudents}</div>
+      <div class="progress-bar" style="width:80px"><div class="progress-fill" style="width:${Math.min(100,(c.enrolledCount/c.maxStudents)*100)}%;background:var(--teal)"></div></div>
+    </td>
+    <td><span class="badge bg-gray">${e(c.semester)}</span></td>
+    <td><span class="badge ${c.isActive?'bg-green':'bg-red'}">${c.isActive?'Active':'Inactive'}</span></td>
+    <td><div style="display:flex;gap:6px">
+      <button class="btn btn-outline btn-sm" onclick='openEdit(${JSON.stringify(c)})'><i class="fa-solid fa-pen"></i></button>
+      <button class="btn btn-danger btn-sm" onclick="deactivate('${c._id}')"><i class="fa-solid fa-ban"></i></button>
+    </div></td>
+  </tr>`).join('');
+}
+
+function openCreate(){
+  document.getElementById('edit-id').value='';
+  document.getElementById('modal-title').textContent='Add Course';
+  ['f-code','f-name','f-desc','f-instructor','f-dept','f-ay'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-units').value='3';document.getElementById('f-max').value='40';document.getElementById('f-tuition').value='500';
+  document.getElementById('f-sem').value='1st';
+  openModal('modal');
+}
+
+function openEdit(c){
+  document.getElementById('edit-id').value=c._id;
+  document.getElementById('modal-title').textContent='Edit Course';
+  document.getElementById('f-code').value=c.courseCode||'';document.getElementById('f-name').value=c.courseName||'';
+  document.getElementById('f-units').value=c.units||'';document.getElementById('f-desc').value=c.description||'';
+  document.getElementById('f-instructor').value=c.instructor||'';document.getElementById('f-dept').value=c.department||'';
+  document.getElementById('f-max').value=c.maxStudents||40;document.getElementById('f-tuition').value=c.tuitionPerUnit||500;
+  document.getElementById('f-sem').value=c.semester||'1st';document.getElementById('f-ay').value=c.academicYear||'';
+  openModal('modal');
+}
+
+async function save(){
+  const id=document.getElementById('edit-id').value;
+  const body={courseCode:document.getElementById('f-code').value.trim().toUpperCase(),courseName:document.getElementById('f-name').value.trim(),units:Number(document.getElementById('f-units').value),description:document.getElementById('f-desc').value.trim(),instructor:document.getElementById('f-instructor').value.trim(),department:document.getElementById('f-dept').value.trim(),maxStudents:Number(document.getElementById('f-max').value),tuitionPerUnit:Number(document.getElementById('f-tuition').value),semester:document.getElementById('f-sem').value,academicYear:document.getElementById('f-ay').value.trim()};
+  if(!body.courseCode||!body.courseName||!body.instructor) return showToast('Code, name, and instructor are required.','error');
+  const btn=document.getElementById('save-btn');btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Saving…';
+  const res=id?await apiFetch(`/admin/courses/${id}`,{method:'PUT',body:JSON.stringify(body)}):await apiFetch('/admin/courses',{method:'POST',body:JSON.stringify(body)});
+  btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-floppy-disk"></i> Save';
+  closeModal('modal');
+  if(res?.ok){showToast(id?'Course updated.':'Course created.','success');await load();}
+  else showToast(res?.data?.message||'Failed.','error');
+}
+
+async function deactivate(id){
+  if(!confirm('Deactivate this course?')) return;
+  const res=await apiFetch(`/admin/courses/${id}`,{method:'DELETE'});
+  if(res?.ok){showToast('Course deactivated.','success');const c=all.find(x=>x._id===id);if(c)c.isActive=false;filter();}
+  else showToast('Failed.','error');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+/* Admin accent — crimson red instead of gold active state */
+.admin-sidebar .nav-item.active{
+  background:rgba(224,85,85,0.1);
+  color:#f48a8a;border-left-color:#e05555;
+}
+.admin-sidebar .sb-univ{color:var(--text-h)}
+.admin-sidebar .sb-sub{color:#e05555}
+
+/* Admin action cards */
+.action-card{
+  display:flex;align-items:center;gap:18px;
+  padding:22px;background:var(--ink-card);
+  border:1px solid var(--ink-border);border-radius:var(--r);
+  text-decoration:none;cursor:pointer;
+  transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;
+}
+.action-card:hover{
+  transform:translateY(-3px);box-shadow:var(--shadow-hover);
+  border-color:var(--gold-border);
+}
+.action-card .ac-ico{font-size:30px;flex-shrink:0}
+.action-card .ac-title{font-weight:700;color:var(--text-h);font-size:14px;margin-bottom:3px}
+.action-card .ac-desc{font-size:12px;color:var(--text-m)}

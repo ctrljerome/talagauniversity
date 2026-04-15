@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Admin Dashboard – Talaga University</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/portal.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+<aside class="sidebar admin-sidebar" id="sidebar">
+  <div class="sb-brand">
+    <div class="sb-crest" style="background:linear-gradient(160deg,#e05555 0%,#9a2020 100%)"><i class="fa-solid fa-shield-halved"></i></div>
+    <div class="sb-text"><div class="sb-univ">Talaga University</div><div class="sb-sub" style="color:#e05555">Admin Panel</div></div>
+  </div>
+  <nav class="sb-nav">
+    <div class="nav-section">Management</div>
+    <a href="dashboard.html"     class="nav-item active" data-page="dashboard"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></a>
+    <a href="students.html"      class="nav-item" data-page="students"><i class="fa-solid fa-users"></i><span>Students</span></a>
+    <a href="instructors.html"   class="nav-item" data-page="instructors"><i class="fa-solid fa-chalkboard-user"></i><span>Instructors</span></a>
+    <a href="courses.html"       class="nav-item" data-page="courses"><i class="fa-solid fa-book-open"></i><span>Courses</span></a>
+    <div class="nav-section">Academic</div>
+    <a href="grades.html"        class="nav-item" data-page="grades"><i class="fa-solid fa-chart-line"></i><span>Grades</span></a>
+    <a href="announcements.html" class="nav-item" data-page="announcements"><i class="fa-solid fa-bullhorn"></i><span>Announcements</span></a>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-user"><div class="sb-avatar" id="sb-avatar">A</div><div class="sb-user-info"><div class="sb-user-name" id="sb-name">Administrator</div><div class="sb-user-role" style="color:#e05555">Admin</div></div></div>
+    <button class="logout-btn" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i><span>Sign Out</span></button>
+  </div>
+</aside>
+<div class="mobile-top"><button class="menu-btn" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button><span class="mob-brand">TU Admin</span><div class="mob-av" id="mob-av">A</div></div>
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<main class="main">
+  <div class="pg-header">
+    <div>
+      <div class="pg-eyebrow" style="color:#e05555">System Administration</div>
+      <h1 class="pg-title">Admin Dashboard</h1>
+      <div class="pg-meta"><span class="meta-tag"><i class="fa-solid fa-calendar-days"></i><span id="date-chip"></span></span></div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row" style="grid-template-columns:repeat(4,1fr)">
+    <div class="stat-card" style="--accent:#e05555"><div class="stat-ico" style="background:rgba(224,85,85,0.12);color:#e05555"><i class="fa-solid fa-users"></i></div><div><div class="stat-val" id="s-students">—</div><div class="stat-lbl">Total Students</div></div></div>
+    <div class="stat-card" style="--accent:var(--gold)"><div class="stat-ico"><i class="fa-solid fa-chalkboard-user"></i></div><div><div class="stat-val" id="s-instructors">—</div><div class="stat-lbl">Instructors</div></div></div>
+    <div class="stat-card" style="--accent:var(--teal)"><div class="stat-ico" style="background:rgba(45,200,180,0.12);color:var(--teal)"><i class="fa-solid fa-layer-group"></i></div><div><div class="stat-val" id="s-courses">—</div><div class="stat-lbl">Active Courses</div></div></div>
+    <div class="stat-card" style="--accent:var(--purple)"><div class="stat-ico" style="background:rgba(155,127,234,0.12);color:var(--purple)"><i class="fa-solid fa-bullhorn"></i></div><div><div class="stat-val" id="s-ann">—</div><div class="stat-lbl">Announcements</div></div></div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-top:8px">
+    <a href="students.html"      class="action-card"><div class="ac-ico" style="color:#e05555"><i class="fa-solid fa-users"></i></div><div><div class="ac-title">Manage Students</div><div class="ac-desc">Create accounts & manage enrollment</div></div></a>
+    <a href="instructors.html"   class="action-card"><div class="ac-ico" style="color:var(--gold)"><i class="fa-solid fa-chalkboard-user"></i></div><div><div class="ac-title">Manage Instructors</div><div class="ac-desc">Add and update faculty records</div></div></a>
+    <a href="courses.html"       class="action-card"><div class="ac-ico" style="color:var(--teal)"><i class="fa-solid fa-book-open"></i></div><div><div class="ac-title">Manage Courses</div><div class="ac-desc">Create and configure course offerings</div></div></a>
+    <a href="grades.html"        class="action-card"><div class="ac-ico" style="color:var(--purple)"><i class="fa-solid fa-chart-line"></i></div><div><div class="ac-title">Enter Grades</div><div class="ac-desc">Input and update student grades</div></div></a>
+    <a href="announcements.html" class="action-card"><div class="ac-ico" style="color:var(--rose)"><i class="fa-solid fa-bullhorn"></i></div><div><div class="ac-title">Announcements</div><div class="ac-desc">Post and manage university notices</div></div></a>
+  </div>
+</main>
+
+<script src="../js/portal.js"></script>
+<script>
+(async()=>{
+  requireAdmin();
+  const res = await apiFetch('/admin/stats');
+  if(!res?.ok) return;
+  const {stats} = res.data;
+  document.getElementById('s-students').textContent    = stats.totalStudents;
+  document.getElementById('s-instructors').textContent = stats.totalInstructors||'—';
+  document.getElementById('s-courses').textContent     = stats.totalCourses;
+  document.getElementById('s-ann').textContent         = stats.activeAnnouncements;
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Announcements – Admin | Talaga University</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/portal.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+<aside class="sidebar admin-sidebar" id="sidebar">
+  <div class="sb-brand"><div class="sb-crest" style="background:linear-gradient(160deg,#e05555 0%,#9a2020 100%)"><i class="fa-solid fa-shield-halved"></i></div><div class="sb-text"><div class="sb-univ">Talaga University</div><div class="sb-sub" style="color:#e05555">Admin Panel</div></div></div>
+  <nav class="sb-nav">
+    <div class="nav-section">Management</div>
+    <a href="dashboard.html"     class="nav-item" data-page="dashboard"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></a>
+    <a href="students.html"      class="nav-item" data-page="students"><i class="fa-solid fa-users"></i><span>Students</span></a>
+    <a href="instructors.html"   class="nav-item" data-page="instructors"><i class="fa-solid fa-chalkboard-user"></i><span>Instructors</span></a>
+    <a href="courses.html"       class="nav-item" data-page="courses"><i class="fa-solid fa-book-open"></i><span>Courses</span></a>
+    <div class="nav-section">Academic</div>
+    <a href="grades.html"        class="nav-item" data-page="grades"><i class="fa-solid fa-chart-line"></i><span>Grades</span></a>
+    <a href="announcements.html" class="nav-item active" data-page="announcements"><i class="fa-solid fa-bullhorn"></i><span>Announcements</span></a>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-user"><div class="sb-avatar" id="sb-avatar">A</div><div class="sb-user-info"><div class="sb-user-name" id="sb-name">Administrator</div><div class="sb-user-role" style="color:#e05555">Admin</div></div></div>
+    <button class="logout-btn" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i><span>Sign Out</span></button>
+  </div>
+</aside>
+<div class="mobile-top"><button class="menu-btn" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button><span class="mob-brand">TU Admin</span><div class="mob-av" id="mob-av">A</div></div>
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<main class="main">
+  <div class="pg-header">
+    <div><div class="pg-eyebrow" style="color:#e05555">Communications</div><h1 class="pg-title">Announcement Management</h1></div>
+    <button class="btn btn-gold" onclick="openCreate()"><i class="fa-solid fa-plus"></i> New Announcement</button>
+  </div>
+  <div id="ann-list"><div style="text-align:center;padding:60px;color:var(--text-m)"><i class="fa-solid fa-spinner fa-spin" style="font-size:24px;margin-bottom:12px;display:block"></i>Loading…</div></div>
+</main>
+
+<!-- Modal -->
+<div class="modal-bg" id="modal">
+  <div class="modal" style="max-width:600px">
+    <div class="modal-hd"><span class="modal-title" id="modal-title">New Announcement</span><button class="modal-close" onclick="closeModal('modal')"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <input type="hidden" id="edit-id">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div class="fgroup"><label>Title *</label><input type="text" id="f-title" placeholder="Announcement title…"></div>
+        <div class="fgroup"><label>Content *</label><textarea id="f-content" rows="5" placeholder="Write your announcement here…"></textarea></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div class="fgroup"><label>Type</label>
+            <select id="f-type"><option value="general">General</option><option value="academic">Academic</option><option value="payment">Payment</option><option value="event">Event</option><option value="urgent">Urgent</option></select>
+          </div>
+          <div class="fgroup"><label>Expires On (optional)</label><input type="date" id="f-expires"></div>
+        </div>
+        <label style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-b);cursor:pointer">
+          <input type="checkbox" id="f-pinned" style="width:16px;height:16px;accent-color:var(--gold)">
+          Pin this announcement to the top
+        </label>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeModal('modal')">Cancel</button>
+      <button class="btn btn-gold" id="save-btn" onclick="save()"><i class="fa-solid fa-paper-plane"></i> Publish</button>
+    </div>
+  </div>
+</div>
+
+<script src="../js/portal.js"></script>
+<script>
+const e=s=>s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):'';
+const TYPE={general:{c:'var(--text-m)',bg:'rgba(96,120,152,0.12)',icon:'fa-circle-info'},academic:{c:'var(--teal)',bg:'rgba(45,200,180,0.10)',icon:'fa-graduation-cap'},payment:{c:'var(--danger)',bg:'rgba(224,85,85,0.10)',icon:'fa-credit-card'},event:{c:'var(--purple)',bg:'rgba(155,127,234,0.10)',icon:'fa-calendar-star'},urgent:{c:'var(--warning)',bg:'rgba(240,165,0,0.10)',icon:'fa-triangle-exclamation'}};
+let all=[];
+
+(async()=>{ requireAdmin(); await load(); })();
+
+async function load(){
+  const res=await apiFetch('/announcements');
+  if(!res?.ok) return showToast('Failed to load','error');
+  all=res.data.announcements||[];
+  render();
+}
+
+function render(){
+  const el=document.getElementById('ann-list');
+  if(!all.length){el.innerHTML=`<div class="empty-state"><i class="fa-solid fa-bullhorn"></i><p>No announcements yet. Create one!</p></div>`;return;}
+  el.innerHTML=all.map(a=>{
+    const t=TYPE[a.type]||TYPE.general;
+    return `<div class="card" style="margin-bottom:14px;border-left:4px solid ${t.c}">
+      <div style="padding:18px 22px">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
+              ${a.isPinned?'<i class="fa-solid fa-thumbtack" style="color:var(--gold);font-size:12px"></i>':''}
+              <h3 style="font-family:\'Cormorant Garamond\',serif;font-size:17px;font-weight:700;color:var(--text-h)">${e(a.title)}</h3>
+              <span style="display:flex;align-items:center;gap:5px;padding:3px 9px;border-radius:5px;font-size:10px;font-weight:700;text-transform:uppercase;background:${t.bg};color:${t.c}"><i class="fa-solid ${t.icon}"></i>${a.type}</span>
+            </div>
+            <p style="font-size:13px;color:var(--text-m);line-height:1.65;margin-bottom:10px">${e(a.content.substring(0,200))}${a.content.length>200?'…':''}</p>
+            <div style="font-size:11px;color:var(--text-m)">Published: ${formatDate(a.publishedAt)}${a.expiresAt?` · Expires: ${formatDate(a.expiresAt)}`:''}</div>
+          </div>
+          <div style="display:flex;gap:6px;flex-shrink:0">
+            <button class="btn btn-outline btn-sm" onclick='openEdit(${JSON.stringify(a).replace(/'/g,"&#39;")})'><i class="fa-solid fa-pen"></i></button>
+            <button class="btn btn-danger btn-sm" onclick="del('${a._id}')"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openCreate(){
+  document.getElementById('edit-id').value='';
+  document.getElementById('modal-title').textContent='New Announcement';
+  document.getElementById('f-title').value='';document.getElementById('f-content').value='';
+  document.getElementById('f-type').value='general';document.getElementById('f-expires').value='';
+  document.getElementById('f-pinned').checked=false;
+  openModal('modal');
+}
+
+function openEdit(a){
+  document.getElementById('edit-id').value=a._id;
+  document.getElementById('modal-title').textContent='Edit Announcement';
+  document.getElementById('f-title').value=a.title||'';document.getElementById('f-content').value=a.content||'';
+  document.getElementById('f-type').value=a.type||'general';
+  document.getElementById('f-expires').value=a.expiresAt?a.expiresAt.substring(0,10):'';
+  document.getElementById('f-pinned').checked=!!a.isPinned;
+  openModal('modal');
+}
+
+async function save(){
+  const id=document.getElementById('edit-id').value;
+  const title=document.getElementById('f-title').value.trim();
+  const content=document.getElementById('f-content').value.trim();
+  if(!title||!content) return showToast('Title and content are required.','error');
+  const body={title,content,type:document.getElementById('f-type').value,isPinned:document.getElementById('f-pinned').checked,expiresAt:document.getElementById('f-expires').value||null};
+  const btn=document.getElementById('save-btn');btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Publishing…';
+  const res=id?await apiFetch(`/admin/announcements/${id}`,{method:'PUT',body:JSON.stringify(body)}):await apiFetch('/admin/announcements',{method:'POST',body:JSON.stringify(body)});
+  btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-paper-plane"></i> Publish';
+  closeModal('modal');
+  if(res?.ok){showToast(id?'Announcement updated.':'Announcement published!','success');await load();}
+  else showToast(res?.data?.message||'Failed.','error');
+}
+
+async function del(id){
+  if(!confirm('Remove this announcement?')) return;
+  const res=await apiFetch(`/admin/announcements/${id}`,{method:'DELETE'});
+  if(res?.ok){showToast('Removed.','success');await load();}
+  else showToast('Failed.','error');
+}
+</script>
+</body>
+</html>

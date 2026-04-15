@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Students – Admin | Talaga University</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/portal.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <style>
+    /* Step wizard */
+    .sw { display:flex;align-items:center;margin-bottom:22px; }
+    .sd { width:30px;height:30px;border-radius:50%;background:var(--ink-border);color:var(--text-m);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;transition:all 0.3s; }
+    .sd.active { background:var(--gold);color:var(--ink); }
+    .sd.done   { background:var(--green);color:var(--ink); }
+    .sl { flex:1;height:2px;background:var(--ink-border);margin:0 8px;max-width:60px;transition:background 0.3s; }
+    .sl.active { background:var(--gold); }
+    .slbl { margin-left:12px;font-size:12px;color:var(--text-m); }
+    /* Enroll picker */
+    .pick { display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--ink-deep);border:1.5px solid var(--ink-border);border-radius:10px;cursor:pointer;transition:border-color 0.15s,background 0.15s;user-select:none; }
+    .pick:hover { border-color:rgba(201,162,39,0.4); }
+    .pick.sel { border-color:var(--gold);background:var(--gold-dim); }
+    .pick.enrolled { border-color:rgba(45,200,180,0.35);background:rgba(45,200,180,0.06);cursor:default; }
+    .pchk { width:20px;height:20px;border-radius:6px;border:2px solid var(--ink-border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s;font-size:11px; }
+    .sel .pchk { background:var(--gold);border-color:var(--gold);color:var(--ink); }
+    .enrolled .pchk { background:var(--teal);border-color:var(--teal);color:var(--ink); }
+    /* Form inputs inside modals */
+    .fi { width:100%;padding:11px 14px;background:var(--ink-deep);border:1.5px solid var(--ink-border);border-radius:8px;color:var(--text-h);font-family:'Inter',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s; }
+    .fi:focus { border-color:var(--gold); }
+    .fi-sel { width:100%;padding:11px 14px;background:var(--ink-deep);border:1.5px solid var(--ink-border);border-radius:8px;color:var(--text-h);font-family:'Inter',sans-serif;font-size:14px;outline:none; }
+    option { background:var(--ink-card); }
+  </style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ─────────────────────────────────────────────────────────── -->
+<aside class="sidebar admin-sidebar" id="sidebar">
+  <div class="sb-brand">
+    <div class="sb-crest" style="background:linear-gradient(160deg,#e05555 0%,#9a2020 100%)">
+      <i class="fa-solid fa-shield-halved"></i>
+    </div>
+    <div class="sb-text">
+      <div class="sb-univ">Talaga University</div>
+      <div class="sb-sub" style="color:#e05555">Admin Panel</div>
+    </div>
+  </div>
+  <nav class="sb-nav">
+    <div class="nav-section">Management</div>
+    <a href="dashboard.html"     class="nav-item" data-page="dashboard"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></a>
+    <a href="students.html"      class="nav-item active" data-page="students"><i class="fa-solid fa-users"></i><span>Students</span></a>
+    <a href="instructors.html"   class="nav-item" data-page="instructors"><i class="fa-solid fa-chalkboard-user"></i><span>Instructors</span></a>
+    <a href="courses.html"       class="nav-item" data-page="courses"><i class="fa-solid fa-book-open"></i><span>Courses</span></a>
+    <div class="nav-section">Academic</div>
+    <a href="grades.html"        class="nav-item" data-page="grades"><i class="fa-solid fa-chart-line"></i><span>Grades</span></a>
+    <a href="announcements.html" class="nav-item" data-page="announcements"><i class="fa-solid fa-bullhorn"></i><span>Announcements</span></a>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-user">
+      <div class="sb-avatar" id="sb-avatar">A</div>
+      <div class="sb-user-info">
+        <div class="sb-user-name" id="sb-name">Administrator</div>
+        <div class="sb-user-role" style="color:#e05555">Admin</div>
+      </div>
+    </div>
+    <button class="logout-btn" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i><span>Sign Out</span></button>
+  </div>
+</aside>
+
+<div class="mobile-top">
+  <button class="menu-btn" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+  <span class="mob-brand">TU Admin</span>
+  <div class="mob-av" id="mob-av">A</div>
+</div>
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<!-- ── MAIN ────────────────────────────────────────────────────────────── -->
+<main class="main">
+  <div class="pg-header">
+    <div>
+      <div class="pg-eyebrow" style="color:#e05555">Registry</div>
+      <h1 class="pg-title">Student Management</h1>
+    </div>
+    <button class="btn btn-gold" onclick="openCreateModal()">
+      <i class="fa-solid fa-user-plus"></i> Create Student
+    </button>
+  </div>
+
+  <div class="card">
+    <div class="toolbar">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="search-input" placeholder="Search by name, email, or student ID…" oninput="filterStudents()">
+      </div>
+      <div class="filter-row">
+        <select class="flt-select" id="year-filter" onchange="filterStudents()">
+          <option value="">All Years</option>
+          <option value="1">1st Year</option>
+          <option value="2">2nd Year</option>
+          <option value="3">3rd Year</option>
+          <option value="4">4th Year</option>
+        </select>
+        <span id="count-label" style="font-size:13px;color:var(--text-m)"></span>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>Student ID</th>
+            <th>Program</th>
+            <th>Year / Section</th>
+            <th>Enrolled</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="students-body">
+          <tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-m)">
+            <i class="fa-solid fa-spinner fa-spin" style="margin-right:8px"></i>Loading students…
+          </td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<!-- ══ CREATE STUDENT (2-step) ═══════════════════════════════════════════ -->
+<div class="modal-bg" id="create-modal">
+  <div class="modal" style="max-width:580px">
+    <div class="modal-hd">
+      <span class="modal-title">
+        <i class="fa-solid fa-user-plus" style="color:var(--gold);margin-right:10px"></i>Create Student Account
+      </span>
+      <button class="modal-close" onclick="closeModal('create-modal')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <!-- Step indicator -->
+      <div class="sw">
+        <div class="sd active" id="sd1">1</div>
+        <div class="sl" id="sl1"></div>
+        <div class="sd" id="sd2">2</div>
+        <span class="slbl" id="step-label">Step 1 of 2 — Student Information</span>
+      </div>
+
+      <!-- Step 1: Info -->
+      <div id="step1">
+        <div class="frow" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div class="fgroup"><label>First Name *</label><input class="fi" type="text" id="c-firstname" placeholder="Maria"></div>
+          <div class="fgroup"><label>Last Name *</label><input class="fi" type="text" id="c-lastname" placeholder="Santos"></div>
+          <div class="fgroup" style="grid-column:1/-1"><label>Email Address *</label><input class="fi" type="email" id="c-email" placeholder="student@talaga.edu.ph"></div>
+          <div class="fgroup" style="grid-column:1/-1">
+            <label>Temporary Password *</label>
+            <div style="position:relative">
+              <input class="fi" type="password" id="c-password" placeholder="Min. 8 characters" style="padding-right:44px">
+              <button type="button" onclick="toggleCPw()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-m);cursor:pointer;font-size:14px">
+                <i class="fa-solid fa-eye" id="cpw-icon"></i>
+              </button>
+            </div>
+          </div>
+          <div class="fgroup"><label>Program</label><input class="fi" type="text" id="c-program" placeholder="BS Computer Science"></div>
+          <div class="fgroup"><label>Year Level</label>
+            <select class="fi-sel" id="c-year">
+              <option value="">Select</option>
+              <option value="1">1st Year</option><option value="2">2nd Year</option>
+              <option value="3">3rd Year</option><option value="4">4th Year</option>
+            </select>
+          </div>
+          <div class="fgroup"><label>Section</label><input class="fi" type="text" id="c-section" placeholder="CS-2A"></div>
+          <div class="fgroup"><label>Contact Number</label><input class="fi" type="text" id="c-contact" placeholder="09XXXXXXXXX"></div>
+        </div>
+        <div class="info-box gold" style="margin-top:14px">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>A unique <strong>Student ID</strong> is automatically generated. The student can log in immediately after this step.</span>
+        </div>
+      </div>
+
+      <!-- Step 2: Assign Subjects -->
+      <div id="step2" style="display:none">
+        <div class="info-box teal" style="margin-bottom:14px">
+          <i class="fa-solid fa-circle-check"></i>
+          <span>Account created for <strong id="created-student-name"></strong>. Now assign subjects (optional — you can skip).</span>
+        </div>
+        <div class="search-box" style="max-width:100%;margin-bottom:12px">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="enroll-search-new" placeholder="Search courses…" oninput="filterNewEnroll()">
+        </div>
+        <div id="new-enroll-list" style="max-height:300px;overflow-y:auto;display:flex;flex-direction:column;gap:8px">
+          <div style="text-align:center;padding:24px;color:var(--text-m)"><i class="fa-solid fa-spinner fa-spin"></i></div>
+        </div>
+        <div style="margin-top:12px;display:flex;justify-content:space-between;font-size:13px">
+          <span style="color:var(--text-m)">Selected: <strong id="new-selected-count" style="color:var(--gold)">0</strong> subject(s)</span>
+          <span style="color:var(--text-m)" id="new-units-label"></span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" id="create-back-btn" onclick="goBack()" style="display:none">← Back</button>
+      <button class="btn btn-outline" id="create-cancel-btn" onclick="closeModal('create-modal')">Cancel</button>
+      <button class="btn btn-gold" id="create-next-btn" onclick="handleNext()">
+        Next: Assign Subjects <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MANAGE ENROLLMENT (existing student) ══════════════════════════════ -->
+<div class="modal-bg" id="enroll-modal">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-hd">
+      <span class="modal-title"><i class="fa-solid fa-file-circle-plus" style="color:var(--gold);margin-right:10px"></i>Manage Enrollment</span>
+      <button class="modal-close" onclick="closeModal('enroll-modal')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div style="margin-bottom:14px;padding:12px 16px;background:var(--ink-deep);border:1px solid var(--ink-border);border-radius:10px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <strong id="em-name" style="color:var(--text-h);font-size:14px"></strong>
+          <div style="font-size:11px;color:var(--text-m);margin-top:2px" id="em-program"></div>
+        </div>
+        <span id="em-id" style="color:var(--gold);font-size:12px;font-weight:700;background:var(--gold-dim);padding:4px 10px;border-radius:6px"></span>
+      </div>
+      <div class="search-box" style="max-width:100%;margin-bottom:12px">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="em-search" placeholder="Search courses…" oninput="filterEM()">
+      </div>
+      <div id="em-list" style="max-height:340px;overflow-y:auto;display:flex;flex-direction:column;gap:8px">
+        <div style="text-align:center;padding:24px;color:var(--text-m)"><i class="fa-solid fa-spinner fa-spin"></i></div>
+      </div>
+      <div style="margin-top:12px;font-size:12px;color:var(--text-m)">
+        <i class="fa-solid fa-circle-check" style="color:var(--teal);margin-right:5px"></i>Teal = already enrolled &nbsp;·&nbsp;
+        <i class="fa-solid fa-square-check" style="color:var(--gold);margin-right:5px"></i>Gold = will enroll
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeModal('enroll-modal')">Cancel</button>
+      <button class="btn btn-gold" onclick="saveEnrollment()"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ EDIT STUDENT ══════════════════════════════════════════════════════ -->
+<div class="modal-bg" id="edit-modal">
+  <div class="modal">
+    <div class="modal-hd">
+      <span class="modal-title"><i class="fa-solid fa-user-pen" style="color:var(--gold);margin-right:10px"></i>Edit Student</span>
+      <button class="modal-close" onclick="closeModal('edit-modal')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="edit-id">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div class="fgroup"><label>First Name</label><input class="fi" type="text" id="edit-firstname"></div>
+        <div class="fgroup"><label>Last Name</label><input class="fi" type="text" id="edit-lastname"></div>
+        <div class="fgroup"><label>Program</label><input class="fi" type="text" id="edit-program"></div>
+        <div class="fgroup"><label>Year Level</label>
+          <select class="fi-sel" id="edit-year">
+            <option value="">—</option>
+            <option value="1">1st Year</option><option value="2">2nd Year</option>
+            <option value="3">3rd Year</option><option value="4">4th Year</option>
+          </select>
+        </div>
+        <div class="fgroup"><label>Section</label><input class="fi" type="text" id="edit-section"></div>
+        <div class="fgroup"><label>Contact Number</label><input class="fi" type="text" id="edit-contact"></div>
+        <div class="fgroup"><label>Address</label><input class="fi" type="text" id="edit-address" style="grid-column:1/-1"></div>
+        <div class="fgroup"><label>Account Status</label>
+          <select class="fi-sel" id="edit-active">
+            <option value="true">Active</option>
+            <option value="false">Inactive</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeModal('edit-modal')">Cancel</button>
+      <button class="btn btn-gold" onclick="saveStudent()"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<script src="../js/portal.js"></script>
+<script src="js/admin-students.js"></script>
+</body>
+</html>

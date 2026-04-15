@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Dashboard – Talaga University</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+  <div class="sb-brand">
+    <div class="sb-crest"><i class="fa-solid fa-landmark-dome"></i></div>
+    <div class="sb-text"><div class="sb-univ">Talaga University</div><div class="sb-sub">Student Portal</div></div>
+  </div>
+  <nav class="sb-nav">
+    <a href="dashboard.html"     class="nav-item active" data-page="dashboard"><i class="fa-solid fa-house-chimney"></i><span>Dashboard</span></a>
+    <a href="courses.html"       class="nav-item" data-page="courses"><i class="fa-solid fa-book-open-reader"></i><span>My Courses</span></a>
+    <a href="grades.html"        class="nav-item" data-page="grades"><i class="fa-solid fa-chart-line"></i><span>Grades</span></a>
+    <a href="payments.html"      class="nav-item" data-page="payments"><i class="fa-solid fa-credit-card"></i><span>Payments</span></a>
+    <a href="announcements.html" class="nav-item" data-page="announcements"><i class="fa-solid fa-bullhorn"></i><span>Announcements</span></a>
+    <a href="profile.html"       class="nav-item" data-page="profile"><i class="fa-solid fa-id-card"></i><span>My Profile</span></a>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-user"><div class="sb-avatar" id="sb-avatar">--</div><div class="sb-user-info"><div class="sb-user-name" id="sb-name">Loading…</div><div class="sb-user-role" id="sb-role">Student</div></div></div>
+    <button class="logout-btn" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i><span>Sign Out</span></button>
+  </div>
+</aside>
+<div class="mobile-top" id="mob-top"><button class="menu-btn" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button><span class="mob-brand">Talaga University</span><div class="mob-av" id="mob-av">--</div></div>
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<main class="main">
+  <div class="pg-header">
+    <div>
+      <div class="pg-eyebrow">Academic Year 2024–2025</div>
+      <h1 class="pg-title" id="welcome-name">Welcome back</h1>
+      <div class="pg-meta">
+        <span class="meta-tag"><i class="fa-solid fa-id-card"></i><span id="meta-id">—</span></span>
+        <span class="meta-tag"><i class="fa-solid fa-calendar-days"></i><span id="date-chip"></span></span>
+        <span class="meta-tag"><i class="fa-solid fa-location-dot"></i>Talaga, Capas, Tarlac</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-row" id="stats-row">
+    <div class="stat-card" style="--accent:var(--gold)"><div class="stat-ico"><i class="fa-solid fa-book-open"></i></div><div><div class="stat-val" id="s-courses">—</div><div class="stat-lbl">Enrolled Subjects</div></div></div>
+    <div class="stat-card" style="--accent:var(--teal)"><div class="stat-ico" style="background:rgba(45,200,180,0.12);color:var(--teal)"><i class="fa-solid fa-star"></i></div><div><div class="stat-val" id="s-gwa">—</div><div class="stat-lbl">Current GWA</div></div></div>
+    <div class="stat-card" style="--accent:var(--purple)"><div class="stat-ico" style="background:rgba(155,127,234,0.12);color:var(--purple)"><i class="fa-solid fa-hashtag"></i></div><div><div class="stat-val" id="s-units">—</div><div class="stat-lbl">Total Units</div></div></div>
+    <div class="stat-card" style="--accent:var(--danger)"><div class="stat-ico" style="background:rgba(224,85,85,0.12);color:var(--danger)"><i class="fa-solid fa-peso-sign"></i></div><div><div class="stat-val" id="s-balance">—</div><div class="stat-lbl">Balance Due</div></div></div>
+  </div>
+
+  <div class="dash-grid">
+    <div class="card">
+      <div class="card-head"><h2 class="card-title"><i class="fa-solid fa-book-open-reader"></i>Enrolled Subjects</h2><a href="courses.html" class="card-link">View All <i class="fa-solid fa-arrow-right"></i></a></div>
+      <div id="courses-list"><div style="padding:40px;text-align:center;color:var(--text-m)"><i class="fa-solid fa-spinner fa-spin"></i></div></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h2 class="card-title"><i class="fa-solid fa-bullhorn"></i>Announcements</h2><a href="announcements.html" class="card-link">See All <i class="fa-solid fa-arrow-right"></i></a></div>
+      <div id="ann-list"><div style="padding:40px;text-align:center;color:var(--text-m)"><i class="fa-solid fa-spinner fa-spin"></i></div></div>
+    </div>
+  </div>
+</main>
+
+<script src="js/portal.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

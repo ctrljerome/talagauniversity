@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>My Profile – Talaga University</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+  <div class="sb-brand"><div class="sb-crest"><i class="fa-solid fa-landmark-dome"></i></div><div class="sb-text"><div class="sb-univ">Talaga University</div><div class="sb-sub">Student Portal</div></div></div>
+  <nav class="sb-nav">
+    <a href="dashboard.html"     class="nav-item" data-page="dashboard"><i class="fa-solid fa-house-chimney"></i><span>Dashboard</span></a>
+    <a href="courses.html"       class="nav-item" data-page="courses"><i class="fa-solid fa-book-open-reader"></i><span>My Courses</span></a>
+    <a href="grades.html"        class="nav-item" data-page="grades"><i class="fa-solid fa-chart-line"></i><span>Grades</span></a>
+    <a href="payments.html"      class="nav-item" data-page="payments"><i class="fa-solid fa-credit-card"></i><span>Payments</span></a>
+    <a href="announcements.html" class="nav-item" data-page="announcements"><i class="fa-solid fa-bullhorn"></i><span>Announcements</span></a>
+    <a href="profile.html"       class="nav-item active" data-page="profile"><i class="fa-solid fa-id-card"></i><span>My Profile</span></a>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-user"><div class="sb-avatar" id="sb-avatar">--</div><div class="sb-user-info"><div class="sb-user-name" id="sb-name">Loading…</div><div class="sb-user-role" id="sb-role">Student</div></div></div>
+    <button class="logout-btn" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i><span>Sign Out</span></button>
+  </div>
+</aside>
+<div class="mobile-top"><button class="menu-btn" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button><span class="mob-brand">Talaga University</span><div class="mob-av" id="mob-av">--</div></div>
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<main class="main">
+  <div class="pg-header">
+    <div><div class="pg-eyebrow">Account Information</div><h1 class="pg-title">My Profile</h1></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start">
+
+    <!-- Profile Card -->
+    <div class="card" style="text-align:center;padding:32px 24px">
+      <div id="av" style="width:88px;height:88px;border-radius:50%;background:var(--gold-dim);border:3px solid var(--gold-border);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:700;color:var(--gold-lt);margin:0 auto 18px">—</div>
+      <h2 id="p-name" style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;margin-bottom:4px;color:var(--text-h)">—</h2>
+      <p id="p-id"   style="font-size:13px;color:var(--gold);font-weight:600;margin-bottom:4px">—</p>
+      <p id="p-program" style="font-size:12px;color:var(--text-m);margin-bottom:20px">—</p>
+      <div class="info-box gold" style="text-align:left;font-size:12px">
+        <i class="fa-solid fa-lock"></i>
+        <span>Profile information is managed by the <strong>Registrar's Office</strong>. Contact them for updates.</span>
+      </div>
+    </div>
+
+    <!-- Info + Password -->
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <!-- Personal Info (read-only) -->
+      <div class="card">
+        <div class="card-head"><h2 class="card-title"><i class="fa-solid fa-id-card"></i>Personal Information</h2><span class="badge bg-gray"><i class="fa-solid fa-lock" style="font-size:9px"></i> Read Only</span></div>
+        <div style="padding:20px 24px">
+          <div class="info-row"><span class="lbl">Full Name</span><span class="val" id="p-fullname">—</span></div>
+          <div class="info-row"><span class="lbl">Student ID</span><span class="val" id="p-sid">—</span></div>
+          <div class="info-row"><span class="lbl">Email Address</span><span class="val" id="p-email">—</span></div>
+          <div class="info-row"><span class="lbl">Contact Number</span><span class="val" id="p-contact">—</span></div>
+          <div class="info-row"><span class="lbl">Program / Course</span><span class="val" id="p-prog">—</span></div>
+          <div class="info-row"><span class="lbl">Year Level</span><span class="val" id="p-year">—</span></div>
+          <div class="info-row"><span class="lbl">Section</span><span class="val" id="p-section">—</span></div>
+          <div class="info-row"><span class="lbl">Address</span><span class="val" id="p-address">—</span></div>
+          <div class="info-row"><span class="lbl">Enrolled Subjects</span><span class="val" id="p-enrolled">—</span></div>
+        </div>
+      </div>
+
+      <!-- Change Password -->
+      <div class="card">
+        <div class="card-head"><h2 class="card-title"><i class="fa-solid fa-lock"></i>Change Password</h2></div>
+        <form id="pw-form" style="padding:20px 24px" novalidate>
+          <div class="frow" style="margin-bottom:16px">
+            <div class="fgroup full"><label>Current Password</label><input type="password" id="pw-current" placeholder="Enter current password" class="modal-input"></div>
+            <div class="fgroup"><label>New Password</label><input type="password" id="pw-new" placeholder="Min. 8 characters" class="modal-input"></div>
+            <div class="fgroup"><label>Confirm New Password</label><input type="password" id="pw-confirm" placeholder="Repeat new password" class="modal-input"></div>
+          </div>
+          <div style="display:flex;justify-content:flex-end">
+            <button type="submit" class="btn btn-gold" id="pw-btn"><i class="fa-solid fa-key"></i> Update Password</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+
+<style>
+.modal-input{width:100%;padding:11px 14px;background:var(--ink-deep);border:1.5px solid var(--ink-border);border-radius:8px;color:var(--text-h);font-family:'Inter',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s}
+.modal-input:focus{border-color:var(--gold)}
+</style>
+
+<script src="js/portal.js"></script>
+<script>
+// Override initSidebar to also populate profile fields
+const _init = initSidebar;
+window.addEventListener('DOMContentLoaded', async () => {
+  requireAuth();
+  const res = await apiFetch('/auth/me');
+  if(!res?.ok) return showToast('Failed to load profile','error');
+  const u = res.data.user;
+  const name = `${u.firstName} ${u.lastName}`;
+  const init = name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+  const ord = n=>{const s=['th','st','nd','rd'],v=n%100;return s[(v-20)%10]||s[v]||s[0]};
+
+  document.getElementById('av').textContent         = init;
+  document.getElementById('p-name').textContent     = name;
+  document.getElementById('p-id').textContent       = u.studentId||'—';
+  document.getElementById('p-program').textContent  = u.program||'No program set';
+  document.getElementById('p-fullname').textContent = name;
+  document.getElementById('p-sid').textContent      = u.studentId||'—';
+  document.getElementById('p-email').textContent    = u.email||'—';
+  document.getElementById('p-contact').textContent  = u.contactNumber||'—';
+  document.getElementById('p-prog').textContent     = u.program||'—';
+  document.getElementById('p-year').textContent     = u.yearLevel?`${u.yearLevel}${ord(u.yearLevel)} Year`:'—';
+  document.getElementById('p-section').textContent  = u.section||'—';
+  document.getElementById('p-address').textContent  = u.address||'—';
+  document.getElementById('p-enrolled').textContent = (u.enrolledCourses?.length||0)+' subject(s)';
+
+  document.getElementById('pw-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const cur  = document.getElementById('pw-current').value;
+    const nw   = document.getElementById('pw-new').value;
+    const conf = document.getElementById('pw-confirm').value;
+    if(!cur||!nw||!conf) return showToast('Please fill all password fields.','error');
+    if(nw.length<8) return showToast('Password must be at least 8 characters.','error');
+    if(nw!==conf) return showToast('Passwords do not match.','error');
+    const btn = document.getElementById('pw-btn');
+    btn.disabled=true; btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Updating…';
+    const r = await apiFetch('/auth/change-password',{method:'PUT',body:JSON.stringify({currentPassword:cur,newPassword:nw})});
+    btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-key"></i> Update Password';
+    if(r?.ok){showToast('Password updated!','success');document.getElementById('pw-form').reset();}
+    else showToast(r?.data?.message||'Failed.','error');
+  });
+});
+</script>
+</body>
+</html>

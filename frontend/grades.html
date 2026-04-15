@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Grades – Talaga University</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+  <div class="sb-brand"><div class="sb-crest"><i class="fa-solid fa-landmark-dome"></i></div><div class="sb-text"><div class="sb-univ">Talaga University</div><div class="sb-sub">Student Portal</div></div></div>
+  <nav class="sb-nav">
+    <a href="dashboard.html"     class="nav-item" data-page="dashboard"><i class="fa-solid fa-house-chimney"></i><span>Dashboard</span></a>
+    <a href="courses.html"       class="nav-item" data-page="courses"><i class="fa-solid fa-book-open-reader"></i><span>My Courses</span></a>
+    <a href="grades.html"        class="nav-item active" data-page="grades"><i class="fa-solid fa-chart-line"></i><span>Grades</span></a>
+    <a href="payments.html"      class="nav-item" data-page="payments"><i class="fa-solid fa-credit-card"></i><span>Payments</span></a>
+    <a href="announcements.html" class="nav-item" data-page="announcements"><i class="fa-solid fa-bullhorn"></i><span>Announcements</span></a>
+    <a href="profile.html"       class="nav-item" data-page="profile"><i class="fa-solid fa-id-card"></i><span>My Profile</span></a>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-user"><div class="sb-avatar" id="sb-avatar">--</div><div class="sb-user-info"><div class="sb-user-name" id="sb-name">Loading…</div><div class="sb-user-role" id="sb-role">Student</div></div></div>
+    <button class="logout-btn" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i><span>Sign Out</span></button>
+  </div>
+</aside>
+<div class="mobile-top"><button class="menu-btn" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button><span class="mob-brand">Talaga University</span><div class="mob-av" id="mob-av">--</div></div>
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<main class="main">
+  <div class="pg-header">
+    <div>
+      <div class="pg-eyebrow">Academic Performance</div>
+      <h1 class="pg-title">Grades & GWA</h1>
+    </div>
+    <div class="gpa-ring"><div class="gpa-val" id="gwa-val">—</div><div class="gpa-lbl">GWA</div></div>
+  </div>
+
+  <div class="stats-row" style="grid-template-columns:repeat(3,1fr);margin-bottom:24px">
+    <div class="stat-card" style="--accent:var(--green)"><div class="stat-ico" style="background:rgba(61,186,122,0.12);color:var(--green)"><i class="fa-solid fa-circle-check"></i></div><div><div class="stat-val" id="s-passed">—</div><div class="stat-lbl">Passed</div></div></div>
+    <div class="stat-card" style="--accent:var(--warning)"><div class="stat-ico" style="background:rgba(240,165,0,0.12);color:var(--warning)"><i class="fa-solid fa-hourglass-half"></i></div><div><div class="stat-val" id="s-progress">—</div><div class="stat-lbl">In Progress</div></div></div>
+    <div class="stat-card" style="--accent:var(--danger)"><div class="stat-ico" style="background:rgba(224,85,85,0.12);color:var(--danger)"><i class="fa-solid fa-circle-xmark"></i></div><div><div class="stat-val" id="s-failed">—</div><div class="stat-lbl">Failed</div></div></div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-head">
+      <h2 class="card-title"><i class="fa-solid fa-table-list"></i>Grade Sheet</h2>
+      <span style="font-size:12px;color:var(--text-m)" id="sem-label"></span>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Course</th><th style="text-align:center">Units</th>
+            <th style="text-align:center">Prelim</th><th style="text-align:center">Midterm</th>
+            <th style="text-align:center">Final</th>
+            <th style="text-align:center">Rating</th><th style="text-align:center">GP</th><th>Remarks</th>
+          </tr>
+        </thead>
+        <tbody id="grades-body"><tr><td colspan="8" style="text-align:center;padding:48px;color:var(--text-m)"><i class="fa-solid fa-spinner fa-spin"></i></td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Grading Scale Legend -->
+  <div class="card">
+    <div class="card-head"><h2 class="card-title"><i class="fa-solid fa-circle-info"></i>Philippine Grading Scale</h2></div>
+    <div style="padding:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px" id="grade-legend"></div>
+  </div>
+</main>
+
+<script src="js/portal.js"></script>
+<script src="js/grades.js"></script>
+</body>
+</html>

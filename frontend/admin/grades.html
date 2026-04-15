@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Grades – Admin | Talaga University</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/portal.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <style>
+    .fi{width:100%;padding:11px 14px;background:var(--ink-deep);border:1.5px solid var(--ink-border);border-radius:8px;color:var(--text-h);font-family:'Inter',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s}
+    .fi:focus{border-color:var(--gold)}
+  </style>
+</head>
+<body>
+<aside class="sidebar admin-sidebar" id="sidebar">
+  <div class="sb-brand">
+    <div class="sb-crest" style="background:linear-gradient(160deg,#e05555 0%,#9a2020 100%)"><i class="fa-solid fa-shield-halved"></i></div>
+    <div class="sb-text"><div class="sb-univ">Talaga University</div><div class="sb-sub" style="color:#e05555">Admin Panel</div></div>
+  </div>
+  <nav class="sb-nav">
+    <div class="nav-section">Management</div>
+    <a href="dashboard.html"     class="nav-item" data-page="dashboard"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></a>
+    <a href="students.html"      class="nav-item" data-page="students"><i class="fa-solid fa-users"></i><span>Students</span></a>
+    <a href="instructors.html"   class="nav-item" data-page="instructors"><i class="fa-solid fa-chalkboard-user"></i><span>Instructors</span></a>
+    <a href="courses.html"       class="nav-item" data-page="courses"><i class="fa-solid fa-book-open"></i><span>Courses</span></a>
+    <div class="nav-section">Academic</div>
+    <a href="grades.html"        class="nav-item active" data-page="grades"><i class="fa-solid fa-chart-line"></i><span>Grades</span></a>
+    <a href="announcements.html" class="nav-item" data-page="announcements"><i class="fa-solid fa-bullhorn"></i><span>Announcements</span></a>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-user"><div class="sb-avatar" id="sb-avatar">A</div><div class="sb-user-info"><div class="sb-user-name" id="sb-name">Administrator</div><div class="sb-user-role" style="color:#e05555">Admin</div></div></div>
+    <button class="logout-btn" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i><span>Sign Out</span></button>
+  </div>
+</aside>
+<div class="mobile-top"><button class="menu-btn" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button><span class="mob-brand">TU Admin</span><div class="mob-av" id="mob-av">A</div></div>
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<main class="main">
+  <div class="pg-header">
+    <div><div class="pg-eyebrow" style="color:#e05555">Academic Records</div><h1 class="pg-title">Grade Management</h1></div>
+  </div>
+
+  <div class="card">
+    <div class="toolbar">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="search" placeholder="Search by student name or course code…" oninput="filter()">
+      </div>
+      <span id="count" style="font-size:13px;color:var(--text-m)"></span>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>Course</th>
+            <th style="text-align:center">Prelim</th>
+            <th style="text-align:center">Midterm</th>
+            <th style="text-align:center">Final</th>
+            <th style="text-align:center">Final Rating</th>
+            <th style="text-align:center">GP</th>
+            <th>Remarks</th>
+            <th>Edit</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+          <tr><td colspan="9" style="text-align:center;padding:40px;color:var(--text-m)">
+            <i class="fa-solid fa-spinner fa-spin" style="margin-right:8px"></i>Loading…
+          </td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<!-- Grade Edit Modal -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <div class="modal-hd">
+      <span class="modal-title"><i class="fa-solid fa-pen-to-square" style="color:var(--gold);margin-right:10px"></i>Enter Grades</span>
+      <button class="modal-close" onclick="closeModal('modal')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div id="modal-info" style="padding:12px 14px;background:var(--ink-deep);border-radius:8px;margin-bottom:18px;font-size:13px;color:var(--text-m)"></div>
+      <input type="hidden" id="g-id">
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+        <div class="fgroup">
+          <label>Prelim Grade</label>
+          <input class="fi" type="number" id="g-prelim" min="0" max="100" step="0.01" placeholder="0 – 100">
+        </div>
+        <div class="fgroup">
+          <label>Midterm Grade</label>
+          <input class="fi" type="number" id="g-midterm" min="0" max="100" step="0.01" placeholder="0 – 100">
+        </div>
+        <div class="fgroup">
+          <label>Final Grade</label>
+          <input class="fi" type="number" id="g-final" min="0" max="100" step="0.01" placeholder="0 – 100">
+        </div>
+      </div>
+
+      <div class="info-box gold" style="margin-top:16px">
+        <i class="fa-solid fa-circle-info"></i>
+        <span><strong>Final Rating</strong> and <strong>GP Equivalent</strong> are computed automatically from the average of entered components. Leave a field blank to keep it unreleased.</span>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeModal('modal')">Cancel</button>
+      <button class="btn btn-gold" id="save-btn" onclick="save()">
+        <i class="fa-solid fa-floppy-disk"></i> Update Grade
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="../js/portal.js"></script>
+<script>
+const e = s => s ? String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') : '—';
+let all = [];
+
+(async () => { requireAdmin(); await load(); })();
+
+async function load() {
+  const res = await apiFetch('/admin/grades');
+  if (!res?.ok) return showToast('Failed to load grades', 'error');
+  all = res.data.grades || [];
+  document.getElementById('count').textContent = `${all.length} grade record(s)`;
+  filter();
+}
+
+function filter() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const list = all.filter(g => {
+    const sn = `${g.student?.firstName||''} ${g.student?.lastName||''} ${g.student?.studentId||''}`.toLowerCase();
+    const cn = `${g.course?.courseCode||''} ${g.course?.courseName||''}`.toLowerCase();
+    return !q || sn.includes(q) || cn.includes(q);
+  });
+  document.getElementById('count').textContent = `${list.length} / ${all.length}`;
+  render(list);
+}
+
+const gpColor = gp => !gp ? 'bg-gray' : gp <= 1.25 ? 'bg-teal' : gp <= 2 ? 'bg-gold' : gp <= 3 ? 'bg-green' : 'bg-red';
+const remColor = r => r === 'Passed' ? 'bg-green' : r === 'Failed' ? 'bg-red' : r === 'In Progress' ? 'bg-orange' : 'bg-gray';
+
+function render(list) {
+  const tb = document.getElementById('tbody');
+  if (!list.length) {
+    tb.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:48px;color:var(--text-m)">
+      <i class="fa-solid fa-chart-line" style="font-size:28px;display:block;margin-bottom:12px;opacity:0.3"></i>No grade records found.
+    </td></tr>`;
+    return;
+  }
+  tb.innerHTML = list.map(g => `<tr>
+    <td>
+      <strong>${e(g.student?.firstName)} ${e(g.student?.lastName)}</strong>
+      <div class="sub">${e(g.student?.studentId)}</div>
+    </td>
+    <td>
+      <strong>${e(g.course?.courseCode)}</strong>
+      <div class="sub">${e(g.course?.courseName)}</div>
+    </td>
+    <td style="text-align:center">${g.prelimGrade  ?? '<span style="color:var(--text-m)">—</span>'}</td>
+    <td style="text-align:center">${g.midtermGrade ?? '<span style="color:var(--text-m)">—</span>'}</td>
+    <td style="text-align:center">${g.finalGrade   ?? '<span style="color:var(--text-m)">—</span>'}</td>
+    <td style="text-align:center">
+      <strong style="font-size:15px;font-family:'Cormorant Garamond',serif;color:var(--text-h)">${g.finalRating ?? '—'}</strong>
+    </td>
+    <td style="text-align:center">
+      ${g.gpEquivalent
+        ? `<span class="badge ${gpColor(g.gpEquivalent)}">${g.gpEquivalent.toFixed(2)}</span>`
+        : '<span style="color:var(--text-m)">—</span>'}
+    </td>
+    <td><span class="badge ${remColor(g.remarks)}">${e(g.remarks)}</span></td>
+    <td>
+      <button class="btn btn-outline btn-sm" onclick='openEdit(${JSON.stringify(g)})'>
+        <i class="fa-solid fa-pen"></i>
+      </button>
+    </td>
+  </tr>`).join('');
+}
+
+function openEdit(g) {
+  document.getElementById('g-id').value = g._id;
+  document.getElementById('modal-info').innerHTML =
+    `<strong style="color:var(--text-h)">${g.student?.firstName} ${g.student?.lastName}</strong>
+     &nbsp;·&nbsp; <span style="color:var(--gold)">${g.student?.studentId||''}</span>
+     &nbsp;·&nbsp; ${g.course?.courseCode}: ${g.course?.courseName}`;
+  document.getElementById('g-prelim').value  = g.prelimGrade  ?? '';
+  document.getElementById('g-midterm').value = g.midtermGrade ?? '';
+  document.getElementById('g-final').value   = g.finalGrade   ?? '';
+  openModal('modal');
+}
+
+async function save() {
+  const id = document.getElementById('g-id').value;
+  const body = {};
+  const p = document.getElementById('g-prelim').value;  if (p  !== '') body.prelimGrade  = Number(p);
+  const m = document.getElementById('g-midterm').value; if (m  !== '') body.midtermGrade = Number(m);
+  const f = document.getElementById('g-final').value;   if (f  !== '') body.finalGrade   = Number(f);
+
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving…';
+
+  const res = await apiFetch(`/admin/grades/${id}`, { method: 'PUT', body: JSON.stringify(body) });
+  btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Update Grade';
+  closeModal('modal');
+
+  if (res?.ok) { showToast('Grade updated successfully.', 'success'); await load(); }
+  else showToast(res?.data?.message || 'Update failed.', 'error');
+}
+</script>
+</body>
+</html>
