@@ -40,7 +40,7 @@ app.use('/api/', globalLimiter);
 
 // ─── General Middleware ──────────────────────────────────────────────────────
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' ? process.env.CLIENT_URL : '*',
+  origin: process.env.NODE_ENV === 'production' ? process.env.CLIENT_URL : 'https://talagauniversity.onrender.com',
   credentials: true
 }));
 app.use(express.json({ limit: '10kb' })); // Limit body size
